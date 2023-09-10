@@ -1,7 +1,6 @@
 import redis
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import JSONResponse
 
 from config.settings import settings
 from src import models
@@ -24,8 +23,3 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
-
-
-@app.get("/tasks/{task_id}")
-def get_status(task_id):
-    return JSONResponse(task_id)

@@ -1,12 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, Body
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
-from starlette.responses import JSONResponse
 
 from src.dependencies import get_db
 from src.models.item import Item
 from src.schemas import ItemResponse, ItemData, ItemCreateResponse
-from src.tasks.celery import create_task
 
 router = APIRouter()
 
@@ -35,11 +33,3 @@ async def get_all_items(db: Session = Depends(get_db)) -> list[ItemResponse]:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Items not found")
     return [ItemResponse(id=item.id, title=item.title, description=item.description) for item in items]
 
-
-@router.post("/multiple")
-async def multiple(data=Body(...)):
-    amount = int(data["amount"])
-    x = data["x"]
-    y = data["y"]
-    task = create_task.delay(amount, x, y)
-    return JSONResponse({"Task": task.get()})

@@ -16,7 +16,7 @@ services:
   app:
     container_name: app
     build: .
-    command: bash -c "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
+    command: bash -c "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload && /app/start-reload.sh"
     volumes:
       - .:/app
     ports:
@@ -36,6 +36,7 @@ services:
 
   celery-worker:
     container_name: celer_worker
+    restart: always
     build: .
     command: celery -A src.tasks.celery:celery worker --loglevel=info
     volumes:
@@ -49,6 +50,7 @@ services:
 
   flower:
     container_name: flower
+    restart: always
     build: .
     command: celery -A src.tasks.celery:celery flower --port=5555
     ports:
