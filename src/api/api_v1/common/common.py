@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.get("/{id}", response_model=ItemResponse)
-async def get_item(id: int, db: Session = Depends(get_db)) -> ItemResponse:
+def get_item(id: int, db: Session = Depends(get_db)) -> ItemResponse:
     item = db.query(Item).filter(Item.id == id).first()
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
@@ -18,7 +18,7 @@ async def get_item(id: int, db: Session = Depends(get_db)) -> ItemResponse:
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED, response_model=ItemCreateResponse)
-async def create_item(data: ItemData, db: Session = Depends(get_db)) -> ItemCreateResponse:
+def create_item(data: ItemData, db: Session = Depends(get_db)) -> ItemCreateResponse:
     item = Item(**data.dict())
     db.add(item)
     db.commit()
@@ -27,7 +27,7 @@ async def create_item(data: ItemData, db: Session = Depends(get_db)) -> ItemCrea
 
 
 @router.get("s", response_model=list[ItemResponse])
-async def get_all_items(db: Session = Depends(get_db)) -> list[ItemResponse]:
+def get_all_items(db: Session = Depends(get_db)) -> list[ItemResponse]:
     items = db.query(Item).all()
     if not items:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Items not found")

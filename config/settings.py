@@ -8,4 +8,5 @@ class Settings(BaseSettings):
     REDIS_HOST: str = "redis"
     REDIS_DB: int = 0
 
+
 settings = Settings()

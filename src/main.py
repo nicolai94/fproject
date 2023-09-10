@@ -17,8 +17,8 @@ class DynamicCORSMiddleware(CORSMiddleware):
 
 rd = redis.Redis(host="localhost", port=6379, db=0)
 
-def create_app() -> FastAPI:
 
+def create_app() -> FastAPI:
     app = FastAPI()
 
     origins = ["*"]
