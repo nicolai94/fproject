@@ -6,6 +6,7 @@ from config.settings import settings
 from src import models
 from src.api.api_v1.api import api_router
 from src.database import engine
+from src.auth import router as auth_router
 
 models.item.Base.metadata.create_all(bind=engine)
 
@@ -32,6 +33,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(api_router, prefix=settings.API_V1_STR)
+    app.include_router(auth_router, prefix="/auth", tags=["auth"])
 
     return app
 

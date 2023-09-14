@@ -14,7 +14,9 @@ class WeatherParams(BaseSchema):
     sea_level: int
     grnd_level: int
 
-    _format_datetime = validator("temp", "feels_like", "temp_min", "temp_max", allow_reuse=True)(format_weather_temperature)
+    _format_datetime = validator("temp", "feels_like", "temp_min", "temp_max", allow_reuse=True)(
+        format_weather_temperature
+    )
 
 
 class WeatherClientResponse(BaseSchema):

@@ -4,6 +4,10 @@ from pydantic.v1 import BaseSettings
 class Settings(BaseSettings):
     ENV: str = "local"
     VERSION: str = "0.1.0"
+    DEFAULT_TIMEZONE: str = "Europe/Moscow"
+
+    TELEGRAM_API_TOKEN: str = "5200534263:AAEiXK5ZDuRgxgJklaRoOMwU04OJbpPFPfo"
+
     WEATHER_API_KEY: str = "79a53350a68c7ea12db3223614bf7120"
     LATITUDE: float = 60.024
     LONGITUDE: float = 30.214
