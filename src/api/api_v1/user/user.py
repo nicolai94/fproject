@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.orm import Session
 from starlette import status
 
@@ -13,7 +13,8 @@ router = APIRouter()
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_user(user_data: UserCreate, db: Session = Depends(get_db)):
+async def create_user(user_data: UserCreate, importance: Annotated[int, Body(ge=0)], db: Session = Depends(get_db)):
+    print(importance)
     create_user = User(username=user_data.username, password=pwd_context.hash(user_data.password))
     db.add(create_user)
     db.commit()

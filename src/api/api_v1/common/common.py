@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, Path, Body, Query
 from sqlalchemy.orm import Session
 from starlette import status
 
@@ -18,7 +20,9 @@ async def get_weather():
 
 
 @router.get("/{id}", response_model=ItemResponse)
-def get_item(id: int, db: Session = Depends(get_db)) -> ItemResponse:
+def get_item(
+    id: Annotated[int, Path(title="Here is id of Item", ge=0, le=1000)], db: Session = Depends(get_db)
+) -> ItemResponse:
     item = db.query(Item).filter(Item.id == id).first()
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Item not found")
@@ -26,7 +30,10 @@ def get_item(id: int, db: Session = Depends(get_db)) -> ItemResponse:
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED, response_model=ItemCreateResponse)
-def create_item(data: ItemData, db: Session = Depends(get_db)) -> ItemCreateResponse:
+def create_item(
+    data: Annotated[ItemData, Body(examples=[{"title": "some_title", "description": "some-description"}])],
+    db: Session = Depends(get_db),
+) -> ItemCreateResponse:
     item = Item(**data.dict())
     db.add(item)
     db.commit()
@@ -35,7 +42,7 @@ def create_item(data: ItemData, db: Session = Depends(get_db)) -> ItemCreateResp
 
 
 @router.get("s", response_model=list[ItemResponse])
-def get_all_items(db: Session = Depends(get_db)) -> list[ItemResponse]:
+def get_all_items(query: Annotated[str, Query(max_length=20)], db: Session = Depends(get_db)) -> list[ItemResponse]:
     items = db.query(Item).all()
     if not items:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Items not found")
